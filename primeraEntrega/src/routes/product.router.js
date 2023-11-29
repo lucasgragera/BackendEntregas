@@ -1,5 +1,6 @@
 import { Router } from "express";
-import {getAll, getById, create, update, remove, sortAggregation, getQuery, addProductToCart}from "../controllers/product.controllers.js"
+//import {getAll, getById, create, update, remove, sortAggregation, getQuery, addProductToCart}from "../controllers/product.controllers.js"
+import { getAll } from "../controllers/product.controllers.js";
 const router = Router();
 import socketServer from "../app.js";
 import { ProductManager } from "../daos/filesystem/product.dao.js";
@@ -10,7 +11,8 @@ const productManager = new ProductManager("../product.json");
 router.get("/", async (req, res) => {
   try {
     const { limit } = req.query;
-    const products = await productManager.getAll();
+    // const products = await productManager.getAll();
+    const products = await getAll();
     if (!limit) res.status(200).json(products);
     else {
       const productsByLimit = await productManager.getProductsByLimit(limit);
@@ -71,21 +73,21 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.post('/add/:idCart/:idProduct', addProductToCart)
+// router.post('/add/:idCart/:idProduct', addProductToCart)
 
-router.get('/sortAggregation', sortAggregation);
+// router.get('/sortAggregation', sortAggregation);
 
-router.get('/getQuery', getQuery)
+// router.get('/getQuery', getQuery)
 
-router.get("/", getAll);
+// router.get("/", getAll);
 
-router.get("/:id", getById);
+// router.get("/:id", getById);
 
-router.post("/", create);
+// router.post("/", create);
 
-router.put("/:id", update);
+// router.put("/:id", update);
 
-router.delete("/:id", remove);
+// router.delete("/:id", remove);
 
 
 export default router;

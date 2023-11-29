@@ -10,7 +10,7 @@ export default class ProductDaoMongoDB {
       cart.save();
       return cart;
     } catch (error) {
-      console.log(error);
+      console.log('Error en la operación addProductToCart:', error);
     }
   }
   async getQuery(query) {
@@ -53,21 +53,13 @@ export default class ProductDaoMongoDB {
     }
   }
 
-   async getQuery({query}){
-     try {
-       const response = await find({query});
-       return response;
-     } catch (error) {
-       console.log(error);
-     }
-   }
-
   async getAll(page=1 , limit=10) {
     try {
       const response = await ProductModel.paginate({},{page, limit}).lean();
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('Error en la operación getAll:', error);
+      throw error;
     }
   }
 
@@ -76,7 +68,7 @@ export default class ProductDaoMongoDB {
       const response = await ProductModel.findById(id).lean();
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('Error en la operación getById:', error);
     }
   }
 
@@ -85,7 +77,8 @@ export default class ProductDaoMongoDB {
       const response = await ProductModel.create(obj);
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('Error en la operación create:', error);
+      throw error;
     }
   }
 
@@ -96,7 +89,8 @@ export default class ProductDaoMongoDB {
       });
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('Error en la operación update:', error);
+      throw error;
     }
   }
 
@@ -105,7 +99,8 @@ export default class ProductDaoMongoDB {
       const response = await ProductModel.findByIdAndDelete(id);
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('Error en la operación delete:', error);
+      throw error;
     }
   }
 }
