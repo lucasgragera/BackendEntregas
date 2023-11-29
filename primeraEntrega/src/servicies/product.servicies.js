@@ -1,5 +1,7 @@
 import ProductDaoMongoDB from "../daos/mongodb/product.dao.js";
+import ProductManager from "../daos/filesystem/product.dao.js";
 
+//const prodDao =new ProductDaoFS();
 const prodDao = new ProductDaoMongoDB();
 
 export const addProductToCart = async (cartId, productId) => {

@@ -6,7 +6,7 @@ import handlebars from 'express-handlebars';
 import productRouter from './routes/product.router.js';
 import cartManager from './routes/cart.router.js';
 import realtimeproducts from './routes/realtimeproducts.router.js'
-import { ProductManager } from './daos/filesystem/product.dao.js';
+import  ProductManager  from './daos/filesystem/product.dao.js';
 import * as service from "./servicies/chat.services.js";
 import "./daos/mongodb/conexion.js"
 
