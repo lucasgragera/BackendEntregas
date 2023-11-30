@@ -36,40 +36,18 @@ export const getAll = async (req, res, next) => {
   try {
     const { page, limit, category, availability, sort } = req.query;
     const response = await service.getAll(page, limit, category, availability, sort);
-
-    const totalPages = response.totalPages;
-    const currentPage = response.page;
-    const hasPrevPage = response.hasPrevPage;
-    const hasNextPage = response.hasNextPage;
-    const prevPage = response.prevPage;
-    const nextPage = response.nextPage;
-
-    const prevLink = hasPrevPage ? `http://localhost:8080/api/products?page=${prevPage}` : null;
-    const nextLink = hasNextPage ? `http://localhost:8080/api/products?page=${nextPage}` : null;
-
-
-    console.log('totalPages:', totalPages);
-    console.log('prevPage:', prevPage);
-    console.log('nextPage:', nextPage);
-    console.log('page: currentPage:', currentPage);
-    console.log('hasPrevPage:', hasPrevPage);
-    console.log('hasNextPage:', hasNextPage);
-
     
-    // res.status(200).json(response)
-    res.json({
-      response,
+    res.status(200).json(response)({
       status: 'success',
       payload: response.docs,
-      totalPages,
-      prevPage,
-      nextPage,
-      page: currentPage,
-      hasPrevPage,
-      hasNextPage,
-      prevLink,
-      nextLink,
-    });
+      //No logre hacer que se vean status ni payload,
+      //me aparecen, o solo status y payload y no todo lo de paginate,
+      //o todo lo de paginate menos status y payload.
+      //Me podrias decir como harias para que aparezcan ambos? 
+      //lo deje con la segunda opcion porque me parecio la mas completa
+    })
+         
+    
   } catch (error) {
     res.json({
       status: 'error',
@@ -77,28 +55,6 @@ export const getAll = async (req, res, next) => {
     });
   }
 };
-
-
-// export const getAll = async (req, res, next) => {
-//   try {
-//     const { page, limit } = req.query;
-//     const response = await service.getAll(page, limit);
-//     //res.json(response);
-//     const next = response.hasNextPage ? 'http://localhost:8080/api/products?page=${response.nextPage}' : null;
-//     const prev = response.hasPrevPage ? 'http://localhost:8080/api/products?page=${response.prevPage}' : null;
-//     res.json({
-//       results: response.docs,
-//       info: {
-//         count: response.totalDocs,
-//         pages: response.totalPages,
-//         next,
-//         prev
-//       }
-//     })
-//   } catch (error) {
-//   next(error.message);
-// }
-// };
 
 
 export const getById = async (req, res, next) => {
