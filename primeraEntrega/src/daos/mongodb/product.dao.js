@@ -55,7 +55,8 @@ export default class ProductDaoMongoDB {
 
   async getAll(page=1 , limit=10) {
     try {
-      const response = await ProductModel.paginate({},{page, limit}).lean();
+      // const response = await ProductModel.paginate({},{page, limit}).lean();
+      const response = await ProductModel.find()
       return response;
     } catch (error) {
       console.log('Error en la operación getAll:', error);

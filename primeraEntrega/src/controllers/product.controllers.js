@@ -1,9 +1,9 @@
 import * as service from "../servicies/product.servicies.js";
 
-export const addProductToCart = async(req, res, next)=>{
+export const addProductToCart = async (req, res, next) => {
   try {
-    const {idCart} = req.params;
-    const {idProduct} = req.params;
+    const { idCart } = req.params;
+    const { idProduct } = req.params;
     const newProduct = await service.addProductToCart(idCart, idProduct);
     res.json(newProduct);
   } catch (error) {
@@ -11,7 +11,7 @@ export const addProductToCart = async(req, res, next)=>{
   }
 }
 
-export const sortAggregation = async(req, res, next) =>{
+export const sortAggregation = async (req, res, next) => {
   try {
     const response = await service.sortAggregation();
     res.json(response);
@@ -23,13 +23,13 @@ export const sortAggregation = async(req, res, next) =>{
 
 export const getQuery = async (req, res, next) => {
   try {
-    const {query} = req.query;
-    const response = await service.getQuery({query});
+    const { query } = req.query;
+    const response = await service.getQuery({ query });
     const queryColl = response.hasQuery ? 'http://localhost:8080/api/products?page=${response.hasQuery}' : null;
     res.json(queryColl)
   } catch (error) {
-  next(error.message);
-}
+    next(error.message);
+  }
 };
 
 export const getAll = async (req, res, next) => {
@@ -47,7 +47,18 @@ export const getAll = async (req, res, next) => {
     const prevLink = hasPrevPage ? `http://localhost:8080/api/products?page=${prevPage}` : null;
     const nextLink = hasNextPage ? `http://localhost:8080/api/products?page=${nextPage}` : null;
 
+
+    console.log('totalPages:', totalPages);
+    console.log('prevPage:', prevPage);
+    console.log('nextPage:', nextPage);
+    console.log('page: currentPage:', currentPage);
+    console.log('hasPrevPage:', hasPrevPage);
+    console.log('hasNextPage:', hasNextPage);
+
+    
+    // res.status(200).json(response)
     res.json({
+      response,
       status: 'success',
       payload: response.docs,
       totalPages,
