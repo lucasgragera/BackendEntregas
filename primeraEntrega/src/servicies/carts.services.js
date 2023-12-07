@@ -3,6 +3,7 @@ import ProductDaoMongoDB from "../daos/mongodb/product.dao.js";
 const cartDao = new CartDaoMongoDB();
 const productDao = new ProductDaoMongoDB();
 
+
 export const getAll = async () => {
   try {
     return await cartDao.getAll();

@@ -17,43 +17,18 @@ router.post('/', async (req, res) => {
     }
 });
 
- //Buscar carrito por ID
-//  router.get('/:cid', async (req, res) => {
-//      try {
-//          const { cid } = req.params;
-//          const cart = await cartManager.getCartById(cid);
-//          if (cart) {
-//              // Calcula la cantidad total de cada producto en el carrito
-//              const cartWithQuantity = {
-//                  ...cart,
-//                  products: cart.products.map((product) => ({
-//                      ...product,
-//                      quantity: product.quantity || 1, // Establece una cantidad predeterminada si no está definida
-//                  })),
-//              };
-
-//              res.status(200).json(cartWithQuantity);
-//          } else {
-//              res.status(404).json({ error: 'Cart not found' });
-//          }
-//      } catch (error) {
-//          console.error(error);
-//          res.status(500).json({ error: 'Internal Server Error' });
-//      }
-//  });
 
 router.get('/:cid', async (req, res) => {
     try {
         const { cid } = req.params;
-        const cart = await cartManager.getCartById(cid).populate('products');
+        const cart = await cartManager.getCartById(cid);
 
         if (cart) {
-            // Calcula la cantidad total de cada producto en el carrito
             const cartWithQuantity = {
                 ...cart,
                 products: cart.products.map((product) => ({
                     ...product,
-                    quantity: product.quantity || 1, // Establece una cantidad predeterminada si no está definida
+                    quantity: product.quantity || 1, 
                 })),
             };
 
@@ -61,6 +36,16 @@ router.get('/:cid', async (req, res) => {
         } else {
             res.status(404).json({ error: 'Cart not found' });
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/', async (req, res) => {
+    try {
+        const allCarts = await cartManager.getCarts();
+        res.status(200).json(allCarts);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -86,11 +71,9 @@ router.post('/:idCart/product/:idProd', async (req, res) => {
 });
 
 router.delete('/:cid/products/:id', async (req, res) => {
-// router.delete('/:cid/products/:pid', async (req, res) => {
     try {
-        const { cid, id } = req.params;
-        // const { cid, pid } = req.params;
-        const updatedCart = await cartManager.removeProductFromCart(Number(cid), Number(pid));
+        const { cid, idProd } = req.params;
+        const updatedCart = await cartManager.removeProductFromCart(Number(cid), Number(idProd));
         
         if (updatedCart) {
             res.status(200).json({ message: 'Product removed from cart successfully', cart: updatedCart });
@@ -102,6 +85,22 @@ router.delete('/:cid/products/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+router.delete('/:cid/products/', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const updatedCart = await cartManager.removeAllProductsFromCart(Number(cid));
+
+        if (updatedCart) {
+            res.status(200).json({ message: 'All products removed from cart successfully', cart: updatedCart });
+        } else {
+            res.status(404).json({ error: 'Cart not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 router.put('/:cid', async (req, res) => {
     try {
@@ -123,11 +122,11 @@ router.put('/:cid', async (req, res) => {
 router.put('/:cid/products/:id', async (req, res) => {
 // router.put('/:cid/products/:pid', async (req, res) => {
     try {
-        const { cid, id } = req.params;
+        const { cid, idProd } = req.params;
         // const { cid, pid } = req.params;
         const { quantity } = req.body;
         
-        const updatedCart = await cartManager.updateProductQuantityInCart(Number(cid), Number(pid), quantity);
+        const updatedCart = await cartManager.updateProductQuantityInCart(Number(cid), Number(idProd), quantity);
         
         if (updatedCart) {
             res.status(200).json({ message: 'Product quantity updated successfully', cart: updatedCart });

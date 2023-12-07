@@ -46,7 +46,6 @@ export class CartManager {
         const cart = carts.find(c => c.id == id);
 
         if (cart) {
-            // Calcula la cantidad total de cada producto en el carrito
             const cartWithQuantity = {
                 ...cart,
                 products: cart.products.map((product) => ({
@@ -73,10 +72,8 @@ export class CartManager {
             const existingProductIndex = cart.products.findIndex((p) => p.product === idProd);
 
             if (existingProductIndex !== -1) {
-                // Incrementa la cantidad si el producto ya existe en el carrito
                 cart.products[existingProductIndex].quantity += 1;
             } else {
-                // Agrega un nuevo producto al carrito con cantidad 1
                 const newProduct = {
                     product: idProd,
                     quantity: 1,
@@ -84,10 +81,8 @@ export class CartManager {
                 cart.products.push(newProduct);
             }
 
-            // Actualiza el archivo con los cambios en el carrito
             await fs.promises.writeFile(this.path, JSON.stringify(carts));
 
-            // Devuelve el carrito actualizado
             return cart;
         } else {
             console.log("Cart not found");
@@ -97,4 +92,101 @@ export class CartManager {
         console.error(error);
     }
 }
+async removeProductFromCart(idCart, idProd) {
+  try {
+      const carts = await this.getCarts();
+      const cartIndex = carts.findIndex((c) => c.id == idCart);
+
+      if (cartIndex !== -1) {
+          const cart = carts[cartIndex];
+          const existingProductIndex = cart.products.findIndex((p) => p.product === idProd);
+
+          if (existingProductIndex !== -1) {
+              cart.products.splice(existingProductIndex, 1);
+
+              await fs.promises.writeFile(this.path, JSON.stringify(carts));
+
+              return cart;
+          } else {
+              console.log("Product not found in cart");
+              return null;
+          }
+      } else {
+          console.log("Cart not found");
+          return null;
+      }
+  } catch (error) {
+      console.error(error);
+  }
+}
+async updateProductQuantityInCart(idCart, idProd, newQuantity) {
+  try {
+      const carts = await this.getCarts();
+      const cartIndex = carts.findIndex((c) => c.id == idCart);
+
+      if (cartIndex !== -1) {
+          const cart = carts[cartIndex];
+          const existingProductIndex = cart.products.findIndex((p) => p.product === idProd);
+
+          if (existingProductIndex !== -1) {
+              cart.products[existingProductIndex].quantity = newQuantity;
+
+              await fs.promises.writeFile(this.path, JSON.stringify(carts));
+
+              return cart;
+          } else {
+              console.log("Product not found in cart");
+              return null;
+          }
+      } else {
+          console.log("Cart not found");
+          return null;
+      }
+  } catch (error) {
+      console.error(error);
+  }
+}
+async updateCartProducts(idCart, newProducts) {
+  try {
+      const carts = await this.getCarts();
+      const cartIndex = carts.findIndex((c) => c.id == idCart);
+
+      if (cartIndex !== -1) {
+          const cart = carts[cartIndex];
+          
+          cart.products = newProducts;
+
+          await fs.promises.writeFile(this.path, JSON.stringify(carts));
+
+          return cart;
+      } else {
+          console.log("Cart not found");
+          return null;
+      }
+  } catch (error) {
+      console.error(error);
+  }
+}
+async removeAllProductsFromCart(idCart) {
+  try {
+      const carts = await this.getCarts();
+      const cartIndex = carts.findIndex((c) => c.id == idCart);
+
+      if (cartIndex !== -1) {
+          const cart = carts[cartIndex];
+
+          cart.products = [];
+
+          await fs.promises.writeFile(this.path, JSON.stringify(carts));
+
+          return cart;
+      } else {
+          console.log("Cart not found");
+          return null;
+      }
+  } catch (error) {
+      console.error(error);
+  }
+}
+
 }

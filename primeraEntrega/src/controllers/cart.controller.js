@@ -49,9 +49,7 @@ export const remove = async (req, res, next) => {
 export const addProduct = async (req, res, next) => {
   try {
     const { cid, id } = req.params;
-    // const { cid, pid } = req.params;
     const response = await service.addProduct(cid,id);
-    // const response = await service.addProduct(cid,pid);
     if (!response) res.status(404).json({ msg: "Error"})
     else res.status(200).json({msg: "Producto agregado"})
     

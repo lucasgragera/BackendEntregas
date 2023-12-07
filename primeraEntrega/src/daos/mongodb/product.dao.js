@@ -1,11 +1,12 @@
 import { ProductModel } from "./models/product.model.js";
+import { CartModel } from "./models/cart.model.js";
 
 export default class ProductDaoMongoDB {
   
 
   async addProductToCart(cartId, productId){
     try {
-      const cart = await ProductModel.findById(cartId);
+      const cart = await CartModel.findById(cartId);
       cart.products.push(productId);
       cart.save();
       return cart;
@@ -29,36 +30,30 @@ export default class ProductDaoMongoDB {
       throw error; 
     }
   }
-  //getQuery y sortAggregation lo pude hacer por mi cuenta con la clase del profe e internet
-  //pero no lo se testear. La estructura esta como en clase, deberia funcionar.
-  //En el caso que no funcione, estoy dispuesto a arreglarlo.
 
   async sortAggregation(sortOrder){
     try {
       
       const aggregationPipeline = [];
 
-      // Agregar etapas según el orden de clasificación proporcionado
       if (sortOrder === 'asc') {
         aggregationPipeline.push({ $sort: { price: 1 } });
       } else if (sortOrder === 'desc') {
         aggregationPipeline.push({ $sort: { price: -1 } });
       }
   
-      // Agregar cualquier otra etapa de agregación que necesites
   
       const result = await ProductModel.aggregate(aggregationPipeline);
       return result;
     } catch (error) {
       console.error('Error en la operación de agregación:', error);
-      throw error; // Puedes manejar el error según tus necesidades
+      throw error; 
     }
   }
 
   async getAll(page=1 , limit=10) {
     try {
       const response = await ProductModel.paginate({},{page, limit});
-      //const response = await ProductModel.find()
       return response;
     } catch (error) {
       console.log('Error en la operación getAll:', error);
