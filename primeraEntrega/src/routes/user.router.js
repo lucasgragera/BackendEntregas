@@ -1,5 +1,14 @@
 import { Router } from "express";
 import UserController from "../controllers/user.controller.js";
+import {
+  registerResponse,
+  loginResponse,
+  githubResponse,
+} from "../controllers/user.controller.js";
+import { isAuth } from "../middlewares/isAuth.js";
+
+import passport from "passport";
+
 const controller = new UserController();
 const router = Router();
 import {
@@ -10,11 +19,24 @@ import {
 } from "../controllers/user.controller.js";
 import { validateLogIn } from "../middlewares/middlewares.js";
 
-router.post("/register", controller.register);
+router.post("/register", passport.authenticate('register'),controller.register, registerResponse);
 
-router.post("/login", controller.login);
+router.post("/login",passport.authenticate('login'), controller.login, loginResponse);
 
-router.post("/login", login);
+router.get("/private", isAuth, (req, res) => res.send("route private"));
+
+router.get(
+  "/register-github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] }),
+  githubResponse
+);
+
+//router.post("/login", login);
 
 router.get("/info", validateLogIn, infoSession);
 

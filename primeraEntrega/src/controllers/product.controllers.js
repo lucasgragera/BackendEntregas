@@ -7,7 +7,7 @@ export const addProductToCart = async (req, res, next) => {
     const newProduct = await service.addProductToCart(idCart, idProduct);
     res.json(newProduct);
   } catch (error) {
-    nex(error);
+    next(error);
   }
 }
 

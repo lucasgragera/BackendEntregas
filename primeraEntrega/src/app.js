@@ -11,13 +11,46 @@ import * as service from "./servicies/chat.services.js";
 import userRouter from "./routes/user.router.js";
 import viewsRouter from './routes/views.router.js'
 import "./daos/mongodb/conexion.js"
-import cookieParser from "cookie-parser";
+//import cookieParser from "cookie-parser";
 import session from 'express-session';
 //import sessionFileStore from "session-file-store";
 import MongoStore from "connect-mongo";
 import "../src/daos/mongodb/conexion.js"
 import { MONGO_URL } from "../src/daos/mongodb/conexion.js";
+import "./passport/strategies.js";
+import passport from 'passport';
 
+// export const getAll = async (req, res, next) => {
+//   try {
+//     const { page, limit, category, availability, sort } = req.query;
+//     const products = await ProductModel.paginate({ page, limit });
+//     res.status(200).json(products);
+//   } catch (error) {
+//     res.json({
+//       status: "error",
+//       message: error.message,
+//     });
+//   }
+// };
+
+// export const getAll = async (req, res, next) => {
+//   try {
+//     let { page, limit = 10, sort } = req.query;
+//     if (sort != "asc" || sort != "desc") {
+//       sort = "desc";
+//     }
+//     const products = await ProductModel.find()
+//       .sort({ price: sort })
+//       .limit(limit)
+//       .lean();
+//     res.status(200).json(products);
+//   } catch (error) {
+//     res.json({
+//       status: "error",
+//       message: error.message,
+//     });
+//   }
+// };
 const store = new ProductManager();
 
 const app = express();
@@ -54,12 +87,15 @@ const mongoStoreOptions = {
   }
 }
 app.use(express.urlencoded({extended:true}))
-app.use(cookieParser);
+//app.use(cookieParser);
 
 
 
 //app.use(session(fileStoreOptions));
 app.use(session(mongoStoreOptions));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.json());
 
