@@ -19,6 +19,6 @@ export const createHash = (password) => {
  * @param {*} user usuario existente en base de datos
  * @returns boolean
  */
-export const isValidPass = (user, password ) => {
+export const isValidPassword = (user, password ) => {
     return compareSync(password, user.password);
 };
